@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="users-suite.xml" />
+	<munit:test name="usersFlow-test" doc:id="66857ec5-40d3-44cb-8960-3ed70615a4ac" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Request" doc:id="e4164811-df50-41d9-96e2-807b520a3b8d" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="2d3469b6-893f-4ff3-855e-fd8d368c67d1" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json  --- readUrl('classpath://usersFlowtest\mock_payload.dwl')]" mediaType="application/json " encoding="UTF-8" />
+					<munit-tools:attributes value="#[readUrl('classpath://usersFlowtest\mock_attributes.dwl')]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:spy doc:name="Spy Logger" doc:id="416348ec-d278-4115-be58-85282300fc59" processor="logger">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="ce31a89f-d0e5-439d-88f3-b570a75ca3f2" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:before-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="54f34e0e-94cb-4532-a033-02c280de009f" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import usersFlowtest::spy_assert_payload
+---
+spy_assert_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:before-call>
+				<munit-tools:after-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="d3821ecc-af2a-4312-a5a9-62fa71cc5e7b" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import usersFlowtest::spy_assert_payload1
+---
+spy_assert_payload1::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:after-call>
+			</munit-tools:spy>
+			<munit-tools:spy doc:name="Spy Logger" doc:id="779389e3-adce-4304-a6b5-b0055d4f82e9" processor="logger">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="ccb82384-46d1-44c4-ae85-a581b61c7a2c" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:before-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="9d7753c2-3e2e-4756-b87f-ef8c71943d3d" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import usersFlowtest::spy_assert_payload2
+---
+spy_assert_payload2::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+					<munit-tools:assert doc:name="Assert attributes" doc:id="6e7a3d0f-1524-4f06-8f8b-50aa0503f429" message="The attributes do not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import usersFlowtest::spy_assert_attributes
+---
+spy_assert_attributes::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:before-call>
+				<munit-tools:after-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="238faf5d-beb9-46cd-976d-5886c9cc1ab2" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import usersFlowtest::spy_assert_payload3
+---
+spy_assert_payload3::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:after-call>
+			</munit-tools:spy>
+			<munit:set-event doc:name="Set Input" doc:id="9966c896-c6f6-4581-b082-9c96b6f860bb" >
+				<munit:payload value="#[readUrl('classpath://usersFlowtest\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://usersFlowtest\set-event_attributes.dwl')]" />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to usersFlow" doc:id="4a4ab976-91af-498d-95cd-a59f8ee81576" name="usersFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="3e0af439-ed87-474d-971d-299b028f4883" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import usersFlowtest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:verify-call doc:name="Verify Transform Message" doc:id="86d0f1bb-0b77-425c-beb7-c3cbcc0b7095" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="a8c9c905-8512-4dd0-8981-696bda27dc23" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Logger" doc:id="1447eac3-ada3-41b1-a13a-a95862f6cc44" processor="logger" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="ce31a89f-d0e5-439d-88f3-b570a75ca3f2" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Logger" doc:id="6ef0c1b1-acb8-442a-a36b-d6d0f21d94e2" processor="logger" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="ccb82384-46d1-44c4-ae85-a581b61c7a2c" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

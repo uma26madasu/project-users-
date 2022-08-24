@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="f19dac41-54e8-49bf-856c-85fc645ee5ca" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="usersFlow" doc:id="6ffabd7f-2bb5-4ea4-8307-c9d7d0363d56" >
+		<http:listener doc:name="Listener" doc:id="d7a592b1-1356-4f65-9e67-b2528d2fecd5" config-ref="HTTP_Listener_config" path="/users/{userid}">
+			<repeatable-in-memory-stream />
+		</http:listener>
+		<logger level="INFO" doc:name="Logger" doc:id="ccb82384-46d1-44c4-ae85-a581b61c7a2c" message="starting process for userid:#[attributes.uriParams.userid]"/>
+		<http:request method="GET" doc:name="Request" doc:id="2d3469b6-893f-4ff3-855e-fd8d368c67d1" url='#["https://dummyjson.com/users/" ++ attributes.uriParams.userid]'/>
+		<ee:transform doc:name="Transform Message" doc:id="a8c9c905-8512-4dd0-8981-696bda27dc23" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+---
+Response: payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="ce31a89f-d0e5-439d-88f3-b570a75ca3f2" message="Final XML response :#[payload]"/>
+	</flow>
+</mule>
